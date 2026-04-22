@@ -23,24 +23,24 @@ def is_shit_there(self, download_path, index, fileloc, console, sha1):
     if path.exists(fileloc):
         hash = hashlib.sha1()
         hash_match = 1
-        self.textbox.dlbutton_list[index].configure(text='Redownload')
-        self.textbox.open_button_list[index].configure(text='Open', state='normal', command=lambda: self.open_loc(download_path))
+        self.textbox.dlbutton_list[index].configure(text='重新下载')
+        self.textbox.open_button_list[index].configure(text='打开', state='normal', command=lambda: self.open_loc(download_path))
         if sha1 != 'N/A':
             self.textbox.dlbutton_list[index].configure(state='disabled')
             self.textbox.open_button_list[index].configure(state='disabled')
-            self.textbox.status_list[index].configure(text_color = 'yellow', text='Checking Hash...')
-            with open(fileloc,'rb') as f:
-                if console == 'PlayStation 3' or console == 'PlayStation Vita':
-                    data = f.read()[:-32]
-                else: data = f.read()
-                hash.update(data)
-                if sha1.upper() == (hash.hexdigest().upper()):
-                    hash_match = 1
-                else:
-                    hash_match = 2
-        self.textbox.dlbutton_list[index].configure(state='normal')
-        self.textbox.open_button_list[index].configure(state='normal')
-        return hash_match
+            self.textbox.status_list[index].configure(text_color = 'yellow', text='正在检查哈希...')
+        with open(fileloc,'rb') as f:
+            if console == 'PlayStation 3' or console == 'PlayStation Vita':
+                data = f.read()[:-32]
+            else: data = f.read()
+            hash.update(data)
+            if sha1.upper() == (hash.hexdigest().upper()):
+                hash_match = 1
+            else:
+                hash_match = 2
+    self.textbox.dlbutton_list[index].configure(state='normal')
+    self.textbox.open_button_list[index].configure(state='normal')
+    return hash_match
 
 #Creates a directory for the game in the download path.
 def create_directories(download_path):
@@ -111,32 +111,32 @@ class SettingsWindow(customtkinter.CTkToplevel):
         self.attributes('-topmost', 1)
         self.geometry('540x320')
         self.resizable(0,0)
-        self.title('Settings')
+        self.title('设置')
         self.grid_rowconfigure((0, 1, 2, 3, 4), weight=1)
         self.grid_columnconfigure((0, 1, 2, 3, 4, 5), weight=1)
         self.temp_save, self.temp_rpcs3 = ConfigSettings.check_config()
         if sys.platform == 'win32':
             self.after(200, lambda: self.iconbitmap(resource_path("AphIcon.ico")))
 
-        self.save_dir_label = customtkinter.CTkLabel(master=self, text='Download Update PKGs To This Folder:',justify = 'center', anchor='center')
+        self.save_dir_label = customtkinter.CTkLabel(master=self, text='更新包下载到以下文件夹:',justify = 'center', anchor='center')
         self.save_dir_label.grid(row=0, column=1, columnspan=4, padx=5, pady=(20,0), sticky='sew')
 
         self.save_dir_field = customtkinter.CTkTextbox(master=self, height=25, wrap='none')
         self.save_dir_field.grid(row=1, column=1, columnspan=3, padx=5, pady=(0,0), sticky='new')
-        self.edit_button1 = customtkinter.CTkButton(master=self, width = 50, text='Edit', command = self.button_save_loc)
+        self.edit_button1 = customtkinter.CTkButton(master=self, width = 50, text='编辑', command = self.button_save_loc)
         self.edit_button1.grid(row=1, padx=5, pady=(0,0), column=4, sticky='new')
 
-        self.rpcs3_dir_label = customtkinter.CTkLabel(master=self, text='Folder Containing RPCS3 (Not Needed On Linux):', anchor='center')
+        self.rpcs3_dir_label = customtkinter.CTkLabel(master=self, text='RPCS3 所在文件夹 (Linux 不需要):', anchor='center')
         self.rpcs3_dir_label.grid(row=2, column=1, columnspan=4, padx=0, pady=(0,0), sticky='sew')
 
         self.yaml_dir_field = customtkinter.CTkTextbox(master=self, height=25, width = 400, wrap='none')
         self.yaml_dir_field.grid(row=3, column=1, columnspan=3, padx=5, pady=(0,25), sticky='new')
-        self.edit_button2 = customtkinter.CTkButton(master=self, width = 50, text='Edit', command = self.button_yml_loc)
+        self.edit_button2 = customtkinter.CTkButton(master=self, width = 50, text='编辑', command = self.button_yml_loc)
         self.edit_button2.grid(row=3, padx=5, pady=(0,0), column=4, sticky='new')
 
-        self.save_button = customtkinter.CTkButton(master=self, text='Save', width = 100,  command = self.button_save)
+        self.save_button = customtkinter.CTkButton(master=self, text='保存', width = 100,  command = self.button_save)
         self.save_button.grid(row=4, padx=(0,5), column=2, sticky='e')
-        self.cancel_button = customtkinter.CTkButton(master=self, text='Cancel', width = 100, command=self.destroy)
+        self.cancel_button = customtkinter.CTkButton(master=self, text='取消', width = 100, command=self.destroy)
         self.cancel_button.grid(row=4, padx=(5,135), column=3, columnspan=2, sticky='w')
 
         self.save_dir_field.insert('0.0',self.temp_save)
@@ -193,16 +193,16 @@ class DownloadAllWindow(customtkinter.CTkToplevel):
         if sys.platform == 'win32':
             self.after(200, lambda: self.iconbitmap(resource_path("AphIcon.ico")))
 
-        self.save_dir_label = customtkinter.CTkLabel(master=self, text='You are about to download all of the updates in the list!\n\n\nContinue?\n', anchor='center')
+        self.save_dir_label = customtkinter.CTkLabel(master=self, text='您即将下载列表中的所有更新！\n\n\n是否继续？\n', anchor='center')
         self.save_dir_label.grid(row=1, column=2, columnspan=2, padx=20, pady=0, sticky='ew')
 
-        self.only_new_check = customtkinter.CTkCheckBox(master=self, text="Only Download Updates That I Don't Have")
+        self.only_new_check = customtkinter.CTkCheckBox(master=self, text="只下载我没有的更新")
         self.only_new_check.grid(row=2, column=2, columnspan=2, padx=50, sticky='ew')
 
-        self.save_button = customtkinter.CTkButton(master=self, width = 100, text='Okay')
+        self.save_button = customtkinter.CTkButton(master=self, width = 100, text='确定')
         self.save_button.grid(row=4, padx=(55,5), column=2, sticky='e')
 
-        self.cancel_button = customtkinter.CTkButton(master=self, width = 100, text='Cancel', command=self.destroy)
+        self.cancel_button = customtkinter.CTkButton(master=self, width = 100, text='取消', command=self.destroy)
         self.cancel_button.grid(row=4, padx=(5,55), column=3, sticky='w')
 
 
@@ -241,8 +241,8 @@ class ScrollableLabelButtonFrame(customtkinter.CTkScrollableFrame):
             size = str(round((update_size/1024000),2)) + ' MB'
             size_label = customtkinter.CTkLabel(self, text=size, anchor='e', width = 70)
             status = customtkinter.CTkLabel(self, text='', anchor='e', width = 160)
-            dlbutton = customtkinter.CTkButton(self, text='Download', width=100, height=24)
-            open_button = customtkinter.CTkButton(self, text='Open', width=100, height=24, state = 'disabled')
+            dlbutton = customtkinter.CTkButton(self, text='下载', width=100, height=24)
+            open_button = customtkinter.CTkButton(self, text='打开', width=100, height=24, state = 'disabled')
             prog_bar = customtkinter.CTkProgressBar(self, width=440, height=5)
             prog_bar.set(0)
             q = queue.Queue()
@@ -300,7 +300,7 @@ class App(customtkinter.CTk):
         self.running = True
         self.protocol("WM_DELETE_WINDOW", self.on_closing)
         self.geometry('760x640')
-        self.title('PySN')
+        self.title('PySN (PlayStation 更新下载器)')
         self.resizable(0,1)
         self.toplevel_window = None
         self.stop_down = False
@@ -311,27 +311,27 @@ class App(customtkinter.CTk):
         if sys.platform == 'win32':
             self.iconbitmap(resource_path("AphIcon.ico"))
 
-        self.entry = customtkinter.CTkEntry(master=self, placeholder_text='Enter Serial', width = 125)
+        self.entry = customtkinter.CTkEntry(master=self, placeholder_text='输入序列号', width = 125)
         self.entry.grid(row=0, column=0, padx=(4,2), pady=(6,0), sticky='ew')
         self.combobox = customtkinter.CTkComboBox(master=self, values=['PlayStation 3', 'PlayStation 4', 'PlayStation Vita', 'PlayStation 5'], width = 125)
         self.combobox.grid(row=0, column=1, columnspan=1, padx=(2,2), pady=(6,0), sticky='ew')
         self.combobox.configure(state = 'readonly')
-        self.checkbox = customtkinter.CTkCheckBox(master=self, text='Search Games.yml')
+        self.checkbox = customtkinter.CTkCheckBox(master=self, text='搜索 Games.yml')
         self.checkbox.grid(row=0, column=2, columnspan=2, padx=(2,4), pady=(6,0), sticky='w')
-        self.button1 = customtkinter.CTkButton(master=self, command=self.button_search, text='Search', width = 125)
+        self.button1 = customtkinter.CTkButton(master=self, command=self.button_search, text='搜索', width = 125)
         self.button1.grid(row=0, column=4, padx=4, pady=(6,0), sticky='ew')
 
         self.textbox = ScrollableLabelButtonFrame(master=self, command=self.frame_button_download, corner_radius=5)
         self.textbox.grid(row=1, column=0, columnspan=5, padx=4, pady=(5,5), sticky='nsew')
 
-        self.button2 = customtkinter.CTkButton(master=self, command=self.button_downall, text='Download All', width = 125)
+        self.button2 = customtkinter.CTkButton(master=self, command=self.button_downall, text='下载全部', width = 125)
         self.button2.grid(row=2, column=0, padx=(4,2), pady=(0,6), sticky='ew')
-        self.button3 = customtkinter.CTkButton(master=self, command=self.button_clear, text='Clear', width = 125)
+        self.button3 = customtkinter.CTkButton(master=self, command=self.button_clear, text='清除', width = 125)
         self.button3.grid(row=2, column=1, padx=(2,2), pady=(0,6), sticky='ew')
-        self.clearbox = customtkinter.CTkCheckBox(master=self, text='Clear List On Search')
+        self.clearbox = customtkinter.CTkCheckBox(master=self, text='搜索时清除列表')
         self.clearbox.grid(row=2, column=2, columnspan=2, padx=(2,4), pady=(0,6), sticky='w')
         self.clearbox.select()
-        self.button4 = customtkinter.CTkButton(master=self, command=self.button_settings, text='Settings', width = 125)
+        self.button4 = customtkinter.CTkButton(master=self, command=self.button_settings, text='设置', width = 125)
         self.button4.grid(row=2, column=4, padx=4, pady=(0,6), sticky='ew')
 
     def on_closing(self):
@@ -416,9 +416,9 @@ class App(customtkinter.CTk):
             for item in root.iter('titlepatch'):
                 title_id = item.get('titleid')
         elif var_url.status_code == 200 and var_url.text == '':
-            name = 'No updates available for '
+            name = '无可用更新 '
         else:
-            name = 'Invalid ID'
+            name = '无效ID'
 
         return root, name
 
@@ -492,12 +492,12 @@ class App(customtkinter.CTk):
                 #Check the hash in case an incomplete or corrupt file already exists. Then handle errors in search results.
                 hash_match = is_shit_there(self, download_path, index, fileloc, console, sha1)
                 if hash_match == 1:
-                    self.textbox.status_list[index].configure(text_color = 'green', text='Already Owned!')
+                    self.textbox.status_list[index].configure(text_color = 'green', text='已拥有！')
                 elif hash_match == 2:
-                    self.textbox.status_list[index].configure(text_color = 'red', text='HASH MISMATCH DETECTED!')
+                    self.textbox.status_list[index].configure(text_color = 'red', text='检测到哈希不匹配！')
                 else: pass
         elif game_name == 'Invalid ID':
-            self.textbox.add_item('Invalid ID: ' + title_id, '', '', '', '', 0, '', '', '', '')
+            self.textbox.add_item('无效ID: ' + title_id, '', '', '', '', 0, '', '', '', '')
         else: self.textbox.add_item(game_name + title_id, '', '', '', '', 0, '', '', '', '')
 
     #Searches specifically for PS3 DRM-free update info, and populates the widgets in the frame based on that info.
@@ -546,16 +546,16 @@ class App(customtkinter.CTk):
                     #Check the hash in case an incomplete or corrupt file already exists. Errors in search results are handled by the other search, so we just pass here.
                     hash_match = is_shit_there(self, download_path, index_list[i], fileloc, console, sha1_list[i])
                     if hash_match == 1:
-                        self.textbox.status_list[index_list[i]].configure(text_color = 'green', text='Already Owned!')
+                        self.textbox.status_list[index_list[i]].configure(text_color = 'green', text='已拥有！')
                     elif hash_match == 2:
-                        self.textbox.status_list[index_list[i]].configure(text_color = 'red', text='HASH MISMATCH DETECTED!')
+                        self.textbox.status_list[index_list[i]].configure(text_color = 'red', text='检测到哈希不匹配！')
                     else: pass
                     i = i+1
             else: pass
         else: pass
 
     def search_ps5_update(self, title_id):
-        name = 'PlayStation 5 title updates are not supported yet.'
+        name = 'PlayStation 5 游戏更新暂不支持。'
         self.textbox.add_item(name, '', '', '', '', 0, '', '', '', '')
 
     #Searches for PS3 firmware info, and populates the widgets in the frame based on that info.
@@ -587,7 +587,7 @@ class App(customtkinter.CTk):
                 update_file = 'v' + ver + ' ' + path.basename(url)
                 fileloc = (download_path + '/' + update_file)
                 self.textbox.add_item(game_name, title_id, ' v' + ver, url, console, update_size, sha1, index, download_path, fileloc)
-        else: self.textbox.add_item('Error Connecting to Server', '', '', '', '', 0, '', '', '', '')
+        else: self.textbox.add_item('连接服务器失败', '', '', '', '', 0, '', '', '', '')
 
     #Searches for PS4 or Vita update info and populates the widgets in the frame based on that info.
     def search_ps4_ps5_vita_fw(self, console):
@@ -665,7 +665,7 @@ class App(customtkinter.CTk):
                 fileloc = (download_path + '/' + update_file)
                 self.textbox.add_item(game_name, title_id, ' v' + ver_list[i], url, console, update_size_list[i], sha1, index_list[i], download_path, fileloc)
                 i = i+1
-        else: self.textbox.add_item('Error Connecting to Server', '', '', '', '', 0, '', '', '', '')
+        else: self.textbox.add_item('连接服务器失败', '', '', '', '', 0, '', '', '', '')
 
     #Pauses and resumes download and sends pause message to the queue.
     def toggle_pause(self, index):
@@ -699,16 +699,16 @@ class App(customtkinter.CTk):
                         try:
                             action = self.textbox.queue_list[index].get_nowait()
                             if action == ButtonAction.PAUSE:
-                                self.textbox.status_list[index].configure(text_color = 'yellow', text='Paused')
+                                self.textbox.status_list[index].configure(text_color = 'yellow', text='已暂停')
                                 new_action = self.textbox.queue_list[index].get()
                                 if new_action == ButtonAction.RESUME:
-                                    self.textbox.status_list[index].configure(text_color = 'green', text='Downloading')
+                                    self.textbox.status_list[index].configure(text_color = 'green', text='下载中')
                                     continue
                                 elif new_action == ButtonAction.STOP:
-                                    self.textbox.status_list[index].configure(text_color = 'red', text='Download Cancelled!')
+                                    self.textbox.status_list[index].configure(text_color = 'red', text='下载已取消！')
                                     break
                             elif action == ButtonAction.STOP:
-                                self.textbox.status_list[index].configure(text_color = 'red', text='Download Cancelled!')
+                                self.textbox.status_list[index].configure(text_color = 'red', text='下载已取消！')
                                 break
                         except queue.Empty:
                             pass
@@ -728,15 +728,15 @@ class App(customtkinter.CTk):
             #After the file is downloaded, reconfigure the dl and open button behavior.
             #Then remove the file if the dl was cancelled. If it completed, run is_shit_there to check the hash and configure buttons properly.
             self.textbox.dlbutton_list[index].configure(command=lambda: App.frame_button_download(self, name, title_id, url, console, size, sha1, index, download_path, fileloc))
-            self.textbox.open_button_list[index].configure(text='Open', state = 'disabled', command=lambda: None)
-            if self.textbox.status_list[index].cget('text') == 'Download Cancelled!':
+            self.textbox.open_button_list[index].configure(text='打开', state = 'disabled', command=lambda: None)
+            if self.textbox.status_list[index].cget('text') == '下载已取消！':
                 os.remove(fileloc)
             else:
                 hash_match = is_shit_there(self, download_path, index, fileloc, console, sha1)
                 if hash_match == 1:
-                    self.textbox.status_list[index].configure(text_color = 'green', text='Download Complete!')
+                    self.textbox.status_list[index].configure(text_color = 'green', text='下载完成！')
                 elif hash_match == 2:
-                    self.textbox.status_list[index].configure(text_color = 'red', text='HASH MISMATCH DETECTED!')
+                    self.textbox.status_list[index].configure(text_color = 'red', text='检测到哈希不匹配！')
                 else: pass
 
     #Downloads all files, or only new files based on the check box in the downall window. Pretty sure it belongs in the DownloadAllWindow class.
