@@ -24,7 +24,7 @@ jobs:
       # 关键：去掉 --onefile，就是官方的多文件模式
       - name: Build (Official folder mode)
         run: |
-          pyinstaller PySN.py -w --icon="AphIcon.ico"
+          pyinstaller PySN.py -w --add-data "AphIcon.ico;." --icon="AphIcon.ico"
 
       - name: Zip folder
         run: |
