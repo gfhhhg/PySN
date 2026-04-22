@@ -1,7 +1,7 @@
-name: Build Windows Only
+name: Build Windows (Official Style)
 
 on:
-  workflow_dispatch:  # 允许手动运行（你要的功能）
+  workflow_dispatch:  # 手动运行
 
 jobs:
   build:
@@ -10,10 +10,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Python
+      - name: Set up Python 3.10
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: '3.10'
 
       - name: Install dependencies
         run: |
@@ -21,15 +21,16 @@ jobs:
           pip install -r requirements.txt
           pip install pyinstaller
 
-      - name: Build with PyInstaller
+      # 关键：去掉 --onefile，就是官方的多文件模式
+      - name: Build (Official folder mode)
         run: |
-          pyinstaller PySN.py -w --onefile --icon="AphIcon.ico"
+          pyinstaller PySN.py -w --icon="AphIcon.ico"
 
-      - name: Zip output
+      - name: Zip folder
         run: |
-          Compress-Archive -Path dist\* -DestinationPath PySN_Windows.zip
+          Compress-Archive -Path "dist\PySN\*" -DestinationPath PySN_Windows.zip
 
-      - name: Upload build
+      - name: Upload
         uses: actions/upload-artifact@v4
         with:
           name: PySN_Windows
